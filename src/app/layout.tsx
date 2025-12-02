@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "@/shared/shadcn/components/ui/sonner";
 import "./globals.css";
 
 const interRegular = Inter({
@@ -27,8 +28,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${interRegular.variable} ${interSemiBold.variable} antialiased`}>
+      <body
+        className={`${interRegular.variable} ${interSemiBold.variable} antialiased`}
+      >
         {children}
+        <Toaster />
       </body>
     </html>
   );

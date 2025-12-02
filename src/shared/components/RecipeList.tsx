@@ -11,7 +11,9 @@ export function RecipeList({ recipes, cached }: RecipeListProps) {
   return (
     <div>
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-3xl font-semibold leading-tight">生成されたレシピ</h2>
+        <h2 className="text-lg font-semibold leading-tight sm:text-xl md:text-2xl">
+          生成されたレシピ
+        </h2>
         {cached && (
           <Badge variant="secondary" className="text-sm">
             キャッシュから取得

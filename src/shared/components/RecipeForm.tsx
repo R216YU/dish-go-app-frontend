@@ -5,6 +5,7 @@ import { Upload } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Badge } from "@/shared/shadcn/components/ui/badge";
 import { Button } from "@/shared/shadcn/components/ui/button";
@@ -18,7 +19,10 @@ import {
 } from "@/shared/shadcn/components/ui/form";
 import { Input } from "@/shared/shadcn/components/ui/input";
 import { Label } from "@/shared/shadcn/components/ui/label";
-import { NativeSelect, NativeSelectOption } from "@/shared/shadcn/components/ui/native-select";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@/shared/shadcn/components/ui/native-select";
 import { Textarea } from "@/shared/shadcn/components/ui/textarea";
 import type { CookingRequest } from "@/shared/types/api";
 import { resizeAndConvertImage } from "@/shared/utils/image";
@@ -70,7 +74,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
       form.setValue("image", base64);
     } catch (error) {
       console.error("画像の処理に失敗しました:", error);
-      alert("画像の処理に失敗しました。別の画像をお試しください。");
+      toast.error("画像の処理に失敗しました。別の画像をお試しください。");
     }
   };
 
@@ -95,7 +99,9 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
 
   const handleFormSubmit = (values: RecipeFormValues) => {
     if (!values.image && ingredients.length === 0) {
-      alert("画像のアップロードまたは食材の入力のいずれかを行ってください。");
+      toast.info(
+        "画像のアップロードまたは食材の入力のいずれかを行ってください。"
+      );
       return;
     }
 
@@ -105,7 +111,9 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
       textRequest = `食材: ${ingredients.join(", ")}`;
     }
     if (values.additionalRequest?.trim()) {
-      textRequest += textRequest ? `\n${values.additionalRequest}` : values.additionalRequest;
+      textRequest += textRequest
+        ? `\n${values.additionalRequest}`
+        : values.additionalRequest;
     }
 
     const request: CookingRequest = {
@@ -126,14 +134,19 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(handleFormSubmit)}
+        className="space-y-6"
+      >
         {/* 写真アップロードエリア */}
         <FormField
           control={form.control}
           name="image"
           render={() => (
             <FormItem>
-              <FormLabel className="text-base font-medium">冷蔵庫の写真をアップロード</FormLabel>
+              <FormLabel className="text-sm font-medium sm:text-base">
+                冷蔵庫の写真をアップロード
+              </FormLabel>
               <FormControl>
                 <div className="flex gap-4">
                   <div className="flex-1">
@@ -142,7 +155,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
                       className="flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
                     >
                       <Upload className="mb-2 h-8 w-8 text-gray-400" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                      <span className="text-xs text-gray-600 dark:text-gray-400 sm:text-sm">
                         クリックして画像を選択
                       </span>
                     </label>
@@ -173,7 +186,9 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
 
         {/* 手入力で食材追加 */}
         <div className="space-y-4">
-          <Label className="text-base font-medium">手入力で食材を追加</Label>
+          <Label className="text-sm font-medium sm:text-base">
+            手入力で食材を追加
+          </Label>
           <div className="flex gap-2">
             <FormField
               control={form.control}
@@ -185,6 +200,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
                       {...field}
                       type="text"
                       placeholder="例: トマト、玉ねぎ"
+                      className="text-xs sm:text-sm"
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
                           e.preventDefault();
@@ -207,7 +223,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
                       {...field}
                       type="number"
                       placeholder="個数"
-                      className="w-20"
+                      className="w-20 text-xs sm:text-sm"
                       min="0"
                       step="0.1"
                       onKeyDown={(e) => {
@@ -228,7 +244,10 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
               render={({ field }: { field: any }) => (
                 <FormItem>
                   <FormControl>
-                    <NativeSelect {...field} className="w-24">
+                    <NativeSelect
+                      {...field}
+                      className="w-24 text-xs sm:text-sm"
+                    >
                       {UNIT_OPTIONS.map((option) => (
                         <NativeSelectOption key={option} value={option}>
                           {option}
@@ -245,6 +264,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
               onClick={handleAddIngredient}
               variant="outline"
               disabled={loading}
+              className="text-xs sm:text-sm"
             >
               追加
             </Button>
@@ -255,7 +275,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
                 <Badge
                   key={index}
                   variant="secondary"
-                  className="flex items-center gap-1 bg-green-100 px-3 py-1 text-sm hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800"
+                  className="flex items-center gap-1 bg-green-100 px-3 py-1 text-xs hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 sm:text-sm"
                 >
                   <span>{ingredient}</span>
                   <button
@@ -278,13 +298,15 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
           name="additionalRequest"
           render={({ field }: { field: any }) => (
             <FormItem>
-              <FormLabel className="text-base font-medium">レシピに対する細かい要望</FormLabel>
+              <FormLabel className="text-sm font-medium sm:text-base">
+                レシピに対する細かい要望
+              </FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   placeholder="例: 時短で作れる料理、辛めの味付け、子供向けなど"
                   rows={4}
-                  className="text-base"
+                  className="text-xs sm:text-sm md:text-base"
                 />
               </FormControl>
               <FormMessage />
@@ -297,7 +319,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
           <Button
             type="submit"
             disabled={loading}
-            className="flex-1 bg-green-600 text-base font-medium transition-colors duration-200 hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50"
+            className="flex-1 bg-green-600 text-sm font-medium transition-colors duration-200 hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 sm:text-base"
           >
             {loading ? <Spinner /> : "レシピを生成"}
           </Button>
@@ -306,7 +328,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
             onClick={handleReset}
             disabled={loading}
             variant="outline"
-            className="text-base font-medium transition-colors duration-200 hover:bg-muted focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50"
+            className="text-sm font-medium transition-colors duration-200 hover:bg-muted focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 sm:text-base"
           >
             リセット
           </Button>
