@@ -1,3 +1,4 @@
+import { Button } from "@/shared/shadcn/components/ui/button";
 import Image from "next/image";
 
 export default function Home() {
