@@ -6,11 +6,7 @@ import {
   AccordionTrigger,
 } from "@/shared/shadcn/components/ui/accordion";
 import { Badge } from "@/shared/shadcn/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/shared/shadcn/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/shared/shadcn/components/ui/card";
 import type { Recipe } from "@/shared/types/api";
 
 interface RecipeCardProps {
@@ -32,10 +28,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   };
 
   return (
-    <Card
-      ref={cardRef}
-      className="transition-shadow duration-200 hover:shadow-lg"
-    >
+    <Card ref={cardRef} className="transition-shadow duration-200 hover:shadow-lg">
       <Accordion
         type="single"
         collapsible
@@ -46,9 +39,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           <CardHeader className="space-y-3 pb-0">
             <AccordionTrigger className="hover:no-underline">
               <div className="flex w-full flex-col items-start gap-3 text-left">
-                <h3 className="text-xl font-semibold leading-tight">
-                  {recipe.title}
-                </h3>
+                <h3 className="text-xl font-semibold leading-tight">{recipe.title}</h3>
                 <div className="flex items-center gap-3">
                   <Badge variant="secondary" className="text-sm">
                     {recipe.difficulty}
@@ -64,9 +55,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           <AccordionContent>
             <CardContent className="space-y-6 pt-6">
               <div>
-                <h4 className="mb-3 text-base font-semibold leading-snug">
-                  材料
-                </h4>
+                <h4 className="mb-3 text-base font-semibold leading-snug">材料</h4>
                 <ul className="list-inside list-disc space-y-2 text-base leading-relaxed text-muted-foreground">
                   {recipe.ingredients.map((ingredient) => (
                     <li key={ingredient}>{ingredient}</li>
@@ -75,9 +64,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
               </div>
 
               <div>
-                <h4 className="mb-3 text-base font-semibold leading-snug">
-                  作り方
-                </h4>
+                <h4 className="mb-3 text-base font-semibold leading-snug">作り方</h4>
                 <ol className="space-y-3 text-base leading-relaxed text-muted-foreground">
                   {recipe.instructions.map((instruction) => {
                     const match = instruction.match(/^(\d+)\.\s*(.*)$/);
@@ -85,9 +72,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
                     const text = match ? match[2] : instruction;
                     return (
                       <li key={instruction} className="flex gap-2">
-                        <span className="font-semibold text-primary">
-                          {number}.
-                        </span>
+                        <span className="font-semibold text-primary">{number}.</span>
                         <span>{text}</span>
                       </li>
                     );

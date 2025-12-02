@@ -17,10 +17,9 @@ import { Spinner } from "@/shared/shadcn/components/ui/spinner";
 
 export default function Home() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-  const { recipes, loading, error, cached, generateRecipes, resetError } =
-    useRecipeGenerator({
-      apiUrl,
-    });
+  const { recipes, loading, error, cached, generateRecipes, resetError } = useRecipeGenerator({
+    apiUrl,
+  });
   const recipeListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,9 +54,7 @@ export default function Home() {
         {/* レシピ生成フォーム */}
         <Card className="mb-16">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold">
-              レシピを生成
-            </CardTitle>
+            <CardTitle className="text-2xl font-semibold">レシピを生成</CardTitle>
           </CardHeader>
           <CardContent>
             <RecipeForm onSubmit={generateRecipes} loading={loading} />

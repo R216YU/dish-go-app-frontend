@@ -18,10 +18,7 @@ import {
 } from "@/shared/shadcn/components/ui/form";
 import { Input } from "@/shared/shadcn/components/ui/input";
 import { Label } from "@/shared/shadcn/components/ui/label";
-import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/shared/shadcn/components/ui/native-select";
+import { NativeSelect, NativeSelectOption } from "@/shared/shadcn/components/ui/native-select";
 import { Textarea } from "@/shared/shadcn/components/ui/textarea";
 import type { CookingRequest } from "@/shared/types/api";
 import { resizeAndConvertImage } from "@/shared/utils/image";
@@ -108,9 +105,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
       textRequest = `食材: ${ingredients.join(", ")}`;
     }
     if (values.additionalRequest?.trim()) {
-      textRequest += textRequest
-        ? `\n${values.additionalRequest}`
-        : values.additionalRequest;
+      textRequest += textRequest ? `\n${values.additionalRequest}` : values.additionalRequest;
     }
 
     const request: CookingRequest = {
@@ -131,19 +126,14 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleFormSubmit)}
-        className="space-y-6"
-      >
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
         {/* 写真アップロードエリア */}
         <FormField
           control={form.control}
           name="image"
           render={() => (
             <FormItem>
-              <FormLabel className="text-base font-medium">
-                冷蔵庫の写真をアップロード
-              </FormLabel>
+              <FormLabel className="text-base font-medium">冷蔵庫の写真をアップロード</FormLabel>
               <FormControl>
                 <div className="flex gap-4">
                   <div className="flex-1">
@@ -288,9 +278,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
           name="additionalRequest"
           render={({ field }: { field: any }) => (
             <FormItem>
-              <FormLabel className="text-base font-medium">
-                レシピに対する細かい要望
-              </FormLabel>
+              <FormLabel className="text-base font-medium">レシピに対する細かい要望</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}

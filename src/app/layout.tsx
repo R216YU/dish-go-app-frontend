@@ -27,9 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body
-        className={`${interRegular.variable} ${interSemiBold.variable} antialiased`}
-      >
+      <body className={`${interRegular.variable} ${interSemiBold.variable} antialiased`}>
         {children}
       </body>
     </html>
