@@ -20,9 +20,12 @@ import {
 import { Input } from "@/shared/shadcn/components/ui/input";
 import { Label } from "@/shared/shadcn/components/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/shared/shadcn/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/shadcn/components/ui/select";
 import { Textarea } from "@/shared/shadcn/components/ui/textarea";
 import type { CookingRequest } from "@/shared/types/api";
 import { resizeAndConvertImage } from "@/shared/utils/image";
@@ -194,7 +197,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
               control={form.control}
               name="manualIngredient"
               render={({ field }: { field: any }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-[6]">
                   <FormControl>
                     <Input
                       {...field}
@@ -217,13 +220,13 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
               control={form.control}
               name="ingredientQuantity"
               render={({ field }: { field: any }) => (
-                <FormItem>
+                <FormItem className="flex-[1]">
                   <FormControl>
                     <Input
                       {...field}
                       type="number"
                       placeholder="個数"
-                      className="w-20 text-xs sm:text-sm"
+                      className="w-full text-xs sm:text-sm"
                       min="0"
                       step="0.1"
                       onKeyDown={(e) => {
@@ -242,18 +245,23 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
               control={form.control}
               name="ingredientUnit"
               render={({ field }: { field: any }) => (
-                <FormItem>
+                <FormItem className="flex-[1]">
                   <FormControl>
-                    <NativeSelect
-                      {...field}
-                      className="w-24 text-xs sm:text-sm"
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
                     >
-                      {UNIT_OPTIONS.map((option) => (
-                        <NativeSelectOption key={option} value={option}>
-                          {option}
-                        </NativeSelectOption>
-                      ))}
-                    </NativeSelect>
+                      <SelectTrigger className="w-full text-xs sm:text-sm">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {UNIT_OPTIONS.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -264,7 +272,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
               onClick={handleAddIngredient}
               variant="outline"
               disabled={loading}
-              className="text-xs sm:text-sm"
+              className="flex-[1] text-xs sm:text-sm"
             >
               追加
             </Button>
