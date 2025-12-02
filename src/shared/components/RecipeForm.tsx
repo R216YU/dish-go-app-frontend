@@ -220,7 +220,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
               control={form.control}
               name="ingredientQuantity"
               render={({ field }: { field: any }) => (
-                <FormItem className="flex-[1]">
+                <FormItem className="flex-[2]">
                   <FormControl>
                     <Input
                       {...field}
