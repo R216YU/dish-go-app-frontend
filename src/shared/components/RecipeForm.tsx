@@ -3,6 +3,11 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/shared/shadcn/components/ui/button";
+import { Checkbox } from "@/shared/shadcn/components/ui/checkbox";
+import { Input } from "@/shared/shadcn/components/ui/input";
+import { Label } from "@/shared/shadcn/components/ui/label";
+import { Slider } from "@/shared/shadcn/components/ui/slider";
+import { Textarea } from "@/shared/shadcn/components/ui/textarea";
 import type { CookingRequest } from "@/shared/types/api";
 import { resizeAndConvertImage } from "@/shared/utils/image";
 
@@ -63,83 +68,76 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label
-          htmlFor="text"
-          className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-        >
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="grid gap-4">
+        <Label htmlFor="text" className="text-base font-medium leading-snug">
           食材や料理の希望を入力
-        </label>
-        <textarea
+        </Label>
+        <Textarea
           id="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="例: 冷蔵庫にトマト、玉ねぎ、鶏肉があります。時短で作れる夕食のレシピを提案してください。"
           rows={4}
-          className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+          className="text-base leading-relaxed"
         />
       </div>
 
-      <div>
-        <label
-          htmlFor="image"
-          className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-        >
+      <div className="grid gap-4">
+        <Label htmlFor="image" className="text-base font-medium leading-snug">
           冷蔵庫の写真をアップロード(オプション)
-        </label>
-        <input
+        </Label>
+        <Input
           id="image"
           type="file"
           accept="image/*"
           onChange={handleImageChange}
-          className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-green-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+          className="text-base"
         />
         {imagePreview && (
-          <div className="relative mt-2 h-48 w-full">
+          <div className="relative mt-4 h-56 w-full overflow-hidden rounded-lg border shadow-sm">
             <Image
               src={imagePreview}
               alt="アップロードプレビュー"
               fill
-              className="rounded-lg object-cover"
+              className="object-cover"
             />
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <label
+      <div className="grid gap-8 sm:grid-cols-2">
+        <div className="grid gap-4">
+          <Label
             htmlFor="recipeCount"
-            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+            className="text-base font-medium leading-snug"
           >
-            レシピ数: {recipeCount}
-          </label>
-          <input
+            レシピ数: <span className="font-semibold">{recipeCount}</span>
+          </Label>
+          <Slider
             id="recipeCount"
-            type="range"
-            min="1"
-            max="5"
-            value={recipeCount}
-            onChange={(e) => setRecipeCount(Number(e.target.value))}
-            className="w-full"
+            min={1}
+            max={5}
+            step={1}
+            value={[recipeCount]}
+            onValueChange={(value) => setRecipeCount(value[0])}
           />
         </div>
 
-        <div className="flex items-center">
-          <input
+        <div className="flex items-center gap-3">
+          <Checkbox
             id="useAllIngredients"
-            type="checkbox"
             checked={useAllIngredients}
-            onChange={(e) => setUseAllIngredients(e.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+            onCheckedChange={(checked) =>
+              setUseAllIngredients(checked === true)
+            }
           />
-          <label
+          <Label
             htmlFor="useAllIngredients"
-            className="ml-2 text-sm text-gray-900 dark:text-white"
+            className="text-base font-normal leading-snug"
           >
             すべての食材を使用
-          </label>
+          </Label>
         </div>
       </div>
 
@@ -147,7 +145,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
         <Button
           type="submit"
           disabled={loading}
-          className="flex-1 bg-green-600 hover:bg-green-700"
+          className="flex-1 bg-green-600 text-base font-medium transition-colors duration-200 hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50"
         >
           {loading ? "レシピ生成中..." : "レシピを生成"}
         </Button>
@@ -156,6 +154,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
           onClick={handleReset}
           disabled={loading}
           variant="outline"
+          className="text-base font-medium transition-colors duration-200 hover:bg-muted focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50"
         >
           リセット
         </Button>

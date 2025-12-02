@@ -10,12 +10,8 @@ export function ErrorMessage({ message, onDismiss }: ErrorMessageProps) {
         <div className="flex items-start gap-3">
           <span className="text-2xl">⚠️</span>
           <div>
-            <h3 className="font-semibold text-red-800 dark:text-red-200">
-              エラー
-            </h3>
-            <p className="mt-1 text-sm text-red-700 dark:text-red-300">
-              {message}
-            </p>
+            <h3 className="font-semibold text-red-800 dark:text-red-200">エラー</h3>
+            <p className="mt-1 text-sm text-red-700 dark:text-red-300">{message}</p>
           </div>
         </div>
         {onDismiss && (

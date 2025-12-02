@@ -3,12 +3,15 @@
 - 回答はすべて日本語ベースで行うこと。
 - ユーザーが提供したコードや設定ファイルの内容を尊重し、必要以上に変更しないこと。
 - バックエンドの仕様書に基づき、正しく実装を行うこと。
+- Atlasian Design System のドキュメントを読み込み、デザインの実装を行う。 https://atlassian.design/components
+- Shadcn/ui のドキュメントを読み込んだうえで、デザインの実装を行う。 https://ui.shadcn.com/docs/components
 
 # 利用技術
 
 - プログラミング言語: TypeScript
 - フロントエンドフレームワーク: Next.js (static export)
 - UI ライブラリ: Shadcn UI, Tailwind CSS
+- アイコン: Lucide Icons(shadcn/ui)
 - Lint, Formatter: Biome
 
 ## アプリケーション概要

@@ -1,11 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type {
-  CookingRequest,
-  CookingResponse,
-  Recipe,
-} from "@/shared/types/api";
+import type { CookingRequest, CookingResponse, Recipe } from "@/shared/types/api";
 
 interface UseRecipeGeneratorOptions {
   apiUrl: string;
@@ -35,9 +31,7 @@ export function useRecipeGenerator({
     setError(null);
   };
 
-  const generateRecipes = async (
-    request: CookingRequest
-  ): Promise<CookingResponse | null> => {
+  const generateRecipes = async (request: CookingRequest): Promise<CookingResponse | null> => {
     setLoading(true);
     setError(null);
 
@@ -65,9 +59,7 @@ export function useRecipeGenerator({
         errorMessage =
           "写真から食材を認識できませんでした。明るい場所で撮影した写真をお試しください。";
       } else if (data.errors && data.errors.length > 0) {
-        errorMessage = `入力エラー: ${data.errors
-          .map((e) => e.message)
-          .join(", ")}`;
+        errorMessage = `入力エラー: ${data.errors.map((e) => e.message).join(", ")}`;
       }
 
       setError(errorMessage);
