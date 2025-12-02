@@ -1,10 +1,11 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorMessage } from "@/shared/components/ErrorMessage";
-import { RecipeCard } from "@/shared/components/RecipeCard";
 import { RecipeForm } from "@/shared/components/RecipeForm";
+import { RecipeList } from "@/shared/components/RecipeList";
 import { useRecipeGenerator } from "@/shared/hooks/useRecipeGenerator";
-import { Badge } from "@/shared/shadcn/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -20,6 +21,16 @@ export default function Home() {
     useRecipeGenerator({
       apiUrl,
     });
+  const recipeListRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!loading && recipes.length > 0 && recipeListRef.current) {
+      recipeListRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [loading, recipes.length]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-gray-900 dark:to-black">
@@ -27,10 +38,10 @@ export default function Home() {
         {/* ヘッダー */}
         <header className="mb-16 text-center">
           <h1 className="mb-6 text-5xl font-bold leading-tight text-gray-900 dark:text-white sm:text-6xl">
-            Dish-Go
+            Dish Go
           </h1>
           <p className="text-xl leading-relaxed text-muted-foreground">
-            冷蔵庫の食材からAIがレシピを提案
+            冷蔵庫の食材を撮るだけで、レシピを自動生成！
           </p>
         </header>
 
@@ -43,55 +54,29 @@ export default function Home() {
 
         {/* レシピ生成フォーム */}
         <Card className="mb-16">
-          <CardHeader className="space-y-2">
+          <CardHeader>
             <CardTitle className="text-2xl font-semibold">
               レシピを生成
             </CardTitle>
-            <CardDescription className="text-base">
-              食材や料理の希望を入力してください
-            </CardDescription>
           </CardHeader>
-          <CardContent className="pt-6">
+          <CardContent>
             <RecipeForm onSubmit={generateRecipes} loading={loading} />
           </CardContent>
         </Card>
 
-        {/* ローディング */}
-        {loading && <Spinner />}
-
         {/* レシピ一覧 */}
         {!loading && recipes.length > 0 && (
-          <div>
-            <div className="mb-8 flex items-center justify-between">
-              <h2 className="text-3xl font-semibold leading-tight">
-                生成されたレシピ
-              </h2>
-              {cached && (
-                <Badge variant="secondary" className="text-sm">
-                  キャッシュから取得
-                </Badge>
-              )}
-            </div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {recipes.map((recipe) => (
-                <RecipeCard key={recipe.title} recipe={recipe} />
-              ))}
-            </div>
+          <div ref={recipeListRef}>
+            <RecipeList recipes={recipes} cached={cached} />
           </div>
         )}
 
         {/* 初期表示メッセージ */}
         {!loading && recipes.length === 0 && !error && (
-          <Card className="border-dashed">
-            <CardContent className="flex flex-col items-center justify-center p-16 text-center">
-              <h3 className="text-2xl font-semibold leading-tight">
-                レシピを生成してみましょう
-              </h3>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                食材や料理の希望を入力して、AIにレシピを提案してもらいましょう。
-              </p>
-            </CardContent>
-          </Card>
+          <EmptyState
+            title="レシピを生成してみましょう"
+            description="食材や料理の希望を入力して、AIにレシピを提案してもらいましょう。"
+          />
         )}
       </div>
     </div>
