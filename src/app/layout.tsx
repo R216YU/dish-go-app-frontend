@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "@/shared/shadcn/components/ui/sonner";
+import { Navigation } from "@/shared/components/Navigation";
 import "./globals.css";
 
 const interRegular = Inter({
@@ -31,7 +32,10 @@ export default function RootLayout({
       <body
         className={`${interRegular.variable} ${interSemiBold.variable} antialiased`}
       >
-        {children}
+        <div className="flex min-h-screen">
+          <Navigation />
+          <main className="flex-1 lg:ml-0">{children}</main>
+        </div>
         <Toaster />
       </body>
     </html>
