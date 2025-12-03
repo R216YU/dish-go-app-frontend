@@ -1,6 +1,7 @@
 import { Badge } from "@/shared/shadcn/components/ui/badge";
 import type { Recipe } from "@/shared/types/api";
 import { RecipeCard } from "./RecipeCard";
+import { Heading } from "./Heading";
 
 interface RecipeListProps {
   recipes: Recipe[];
@@ -11,9 +12,7 @@ export function RecipeList({ recipes, cached }: RecipeListProps) {
   return (
     <div>
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-lg font-semibold leading-tight sm:text-xl md:text-2xl">
-          生成されたレシピ
-        </h2>
+        <Heading level="h3">生成されたレシピ</Heading>
         {cached && (
           <Badge variant="secondary" className="text-sm">
             キャッシュから取得

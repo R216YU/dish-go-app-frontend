@@ -11,6 +11,7 @@ import {
   CardContent,
   CardHeader,
 } from "@/shared/shadcn/components/ui/card";
+import { Heading } from "./Heading";
 import type { Recipe } from "@/shared/types/api";
 
 interface RecipeCardProps {
@@ -60,9 +61,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           <CardHeader className="space-y-3 pb-0">
             <AccordionTrigger className="hover:no-underline">
               <div className="flex w-full flex-col items-start gap-3 text-left">
-                <h3 className="text-sm font-semibold leading-tight sm:text-base md:text-lg">
-                  {recipe.title}
-                </h3>
+                <Heading level="h4">{recipe.title}</Heading>
                 <div className="flex items-center gap-3">
                   <Badge
                     variant="secondary"
@@ -83,9 +82,9 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           <AccordionContent>
             <CardContent className="space-y-6 pt-6">
               <div>
-                <h4 className="mb-3 text-xs font-semibold leading-snug sm:text-sm md:text-base">
+                <Heading level="h5" className="mb-3">
                   材料
-                </h4>
+                </Heading>
                 <ul className="list-inside list-disc space-y-2 text-xs leading-relaxed text-muted-foreground sm:text-sm md:text-base">
                   {recipe.ingredients.map((ingredient) => (
                     <li key={ingredient}>{ingredient}</li>
@@ -94,9 +93,9 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
               </div>
 
               <div>
-                <h4 className="mb-3 text-xs font-semibold leading-snug sm:text-sm md:text-base">
+                <Heading level="h5" className="mb-3">
                   作り方
-                </h4>
+                </Heading>
                 <ol className="space-y-3 text-xs leading-relaxed text-muted-foreground sm:text-sm md:text-base">
                   {recipe.instructions.map((instruction) => {
                     const match = instruction.match(/^(\d+)\.\s*(.*)$/);

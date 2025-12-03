@@ -4,11 +4,11 @@ import { useEffect, useRef } from "react";
 import { RecipeForm } from "@/shared/components/RecipeForm";
 import { RecipeList } from "@/shared/components/RecipeList";
 import { useRecipeGenerator } from "@/shared/hooks/useRecipeGenerator";
+import { Heading } from "@/shared/components/Heading";
 import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/shared/shadcn/components/ui/card";
 
 export default function Home() {
@@ -28,13 +28,13 @@ export default function Home() {
   }, [loading, recipes.length]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-gray-900 dark:to-black">
+    <div className="min-h-screen bg-gradient-to-b from-green-50/30 to-background dark:from-green-950/10 dark:to-background">
       <div className="mx-auto max-w-6xl px-6 py-16">
         {/* ヘッダー */}
         <header className="mb-16 text-center">
-          <h1 className="mb-6 text-3xl font-bold leading-tight text-gray-900 dark:text-white sm:text-4xl md:text-5xl">
+          <Heading level="h1" className="mb-6">
             Dish Go
-          </h1>
+          </Heading>
           <p className="text-sm leading-relaxed text-muted-foreground sm:text-base md:text-lg">
             冷蔵庫の食材を撮るだけで、レシピを自動生成！
           </p>
@@ -43,9 +43,7 @@ export default function Home() {
         {/* レシピ生成フォーム */}
         <Card className="mb-16">
           <CardHeader>
-            <CardTitle className="text-base font-semibold sm:text-lg md:text-xl">
-              レシピを生成
-            </CardTitle>
+            <Heading level="h3">レシピを生成</Heading>
           </CardHeader>
           <CardContent>
             <RecipeForm onSubmit={generateRecipes} loading={loading} />

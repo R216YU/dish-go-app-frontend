@@ -8,11 +8,11 @@ import {
   Sheet,
   SheetContent,
   SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/shared/shadcn/components/ui/sheet";
 import { cn } from "@/shared/shadcn/lib/utils";
 import { LoginModal } from "./LoginModal";
+import { Heading } from "./Heading";
 
 // ダミーの履歴データ
 const DUMMY_HISTORY = [
@@ -47,7 +47,9 @@ export function Navigation({ className }: NavigationProps) {
           </SheetTrigger>
           <SheetContent side="left" className="w-80">
             <SheetHeader>
-              <SheetTitle>Dish Go</SheetTitle>
+              <div className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl">
+                Dish Go
+              </div>
             </SheetHeader>
             <NavigationContent onItemClick={() => setIsOpen(false)} />
           </SheetContent>
@@ -62,7 +64,9 @@ export function Navigation({ className }: NavigationProps) {
         )}
       >
         <div className="p-6 border-b">
-          <h1 className="text-2xl font-semibold">Dish Go</h1>
+          <div className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl">
+            Dish Go
+          </div>
         </div>
         <NavigationContent />
       </aside>
@@ -122,7 +126,7 @@ function NavigationContent({ onItemClick }: NavigationContentProps) {
         <div className="flex-1 flex flex-col min-h-0">
           <div className="p-4 flex items-center gap-2 border-b">
             <History className="h-5 w-5" />
-            <h2 className="font-semibold">レシピ履歴</h2>
+            <Heading level="h2">レシピ履歴</Heading>
           </div>
           <ScrollArea className="flex-1">
             <div className="p-4 space-y-2">
