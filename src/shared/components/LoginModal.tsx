@@ -6,9 +6,9 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogTitle,
 } from "@/shared/shadcn/components/ui/dialog";
 import { Button } from "@/shared/shadcn/components/ui/button";
-import { Heading } from "./Heading";
 
 type LoginProvider = "google" | "apple" | "line";
 
@@ -33,7 +33,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <Heading level="h1">ログイン</Heading>
+          <DialogTitle className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl">
+            ログイン
+          </DialogTitle>
           <DialogDescription className="text-base pt-1">
             あなたの料理ライフをもっと便利に。今すぐログインして、献立提案やレシピ履歴を保存しましょう!
           </DialogDescription>
