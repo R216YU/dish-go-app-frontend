@@ -1,5 +1,3 @@
-import heic2any from "heic2any";
-
 /**
  * HEIC/HEIF形式かどうかをチェック
  */
@@ -18,6 +16,9 @@ export function isHEICFormat(file: File): boolean {
  */
 export async function convertHEICToJPEG(file: File): Promise<File> {
   try {
+    // 動的インポートでSSRエラーを回避
+    const heic2any = (await import("heic2any")).default;
+
     const convertedBlob = await heic2any({
       blob: file,
       toType: "image/jpeg",
