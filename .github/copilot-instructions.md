@@ -3,6 +3,7 @@
 - 回答はすべて日本語ベースで行うこと。
 - ユーザーが提供したコードや設定ファイルの内容を尊重し、必要以上に変更しないこと。
 - バックエンドの仕様書に基づき、正しく実装を行うこと。
+- ソースを実装した後は lint や formatter を実行し、コードの品質を保つこと。
 - Atlasian Design System のドキュメントを読み込み、デザインの実装を行う。 https://atlassian.design/components
 - Shadcn/ui のドキュメントを読み込んだうえで、デザインの実装を行う。 https://ui.shadcn.com/docs/components
 - Motion を用いて、スムーズで快適な操作感を提供するアニメーションを実装すること。 https://motion.dev/docs/react-motion-component

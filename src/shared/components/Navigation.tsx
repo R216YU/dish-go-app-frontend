@@ -12,6 +12,7 @@ import {
   SheetTrigger,
 } from "@/shared/shadcn/components/ui/sheet";
 import { cn } from "@/shared/shadcn/lib/utils";
+import { LoginModal } from "./LoginModal";
 
 // ダミーの履歴データ
 const DUMMY_HISTORY = [
@@ -74,9 +75,10 @@ interface NavigationContentProps {
 }
 
 function NavigationContent({ onItemClick }: NavigationContentProps) {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
   const handleLogin = () => {
-    // TODO: ログイン機能の実装
-    console.log("ログイン機能は未実装です");
+    setIsLoginModalOpen(true);
     onItemClick?.();
   };
 
@@ -93,57 +95,60 @@ function NavigationContent({ onItemClick }: NavigationContentProps) {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      {/* アクションボタン */}
-      <div className="p-4 space-y-2 border-b">
-        <Button
-          variant="default"
-          className="w-full justify-start"
-          onClick={handleLogin}
-        >
-          <LogIn className="mr-2 h-4 w-4" />
-          ログイン / 登録
-        </Button>
-        <Button
-          variant="outline"
-          className="w-full justify-start"
-          onClick={handleLanguageChange}
-        >
-          <Languages className="mr-2 h-4 w-4" />
-          言語: 日本語
-        </Button>
-      </div>
-
-      {/* 履歴セクション */}
-      <div className="flex-1 flex flex-col min-h-0">
-        <div className="p-4 flex items-center gap-2 border-b">
-          <History className="h-5 w-5" />
-          <h2 className="font-semibold">レシピ履歴</h2>
+    <>
+      <LoginModal open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen} />
+      <div className="flex flex-col h-full">
+        {/* アクションボタン */}
+        <div className="p-4 space-y-2 border-b">
+          <Button
+            variant="default"
+            className="w-full justify-start"
+            onClick={handleLogin}
+          >
+            <LogIn className="mr-2 h-4 w-4" />
+            ログイン / 登録
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full justify-start"
+            onClick={handleLanguageChange}
+          >
+            <Languages className="mr-2 h-4 w-4" />
+            言語: 日本語
+          </Button>
         </div>
-        <ScrollArea className="flex-1">
-          <div className="p-4 space-y-2">
-            {DUMMY_HISTORY.length > 0 ? (
-              DUMMY_HISTORY.map((recipe) => (
-                <button
-                  key={recipe.id}
-                  onClick={() => handleHistoryClick(recipe.id)}
-                  className="w-full text-left p-3 rounded-lg hover:bg-accent transition-colors"
-                  type="button"
-                >
-                  <div className="font-medium">{recipe.title}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {recipe.date}
-                  </div>
-                </button>
-              ))
-            ) : (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                まだ履歴がありません
-              </p>
-            )}
+
+        {/* 履歴セクション */}
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="p-4 flex items-center gap-2 border-b">
+            <History className="h-5 w-5" />
+            <h2 className="font-semibold">レシピ履歴</h2>
           </div>
-        </ScrollArea>
+          <ScrollArea className="flex-1">
+            <div className="p-4 space-y-2">
+              {DUMMY_HISTORY.length > 0 ? (
+                DUMMY_HISTORY.map((recipe) => (
+                  <button
+                    key={recipe.id}
+                    onClick={() => handleHistoryClick(recipe.id)}
+                    className="w-full text-left p-3 rounded-lg hover:bg-accent transition-colors"
+                    type="button"
+                  >
+                    <div className="font-medium">{recipe.title}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {recipe.date}
+                    </div>
+                  </button>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-8">
+                  まだ履歴がありません
+                </p>
+              )}
+            </div>
+          </ScrollArea>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
