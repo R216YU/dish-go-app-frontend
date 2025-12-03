@@ -68,16 +68,32 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
     if (!file) return;
 
     try {
+      // デバッグ: ファイル情報を表示
+      toast.info(
+        `ファイル情報: ${file.name}, サイズ: ${(
+          file.size /
+          1024 /
+          1024
+        ).toFixed(2)}MB, 形式: ${file.type}`
+      );
+
       // プレビュー用
       const previewUrl = URL.createObjectURL(file);
       setImagePreview(previewUrl);
+      toast.success("プレビュー作成成功");
 
       // API送信用のBase64に変換(圧縮)
+      toast.info("画像を圧縮中...");
       const base64 = await resizeAndConvertImage(file);
+      toast.success(`圧縮完了: ${(base64.length / 1024).toFixed(2)}KB`);
+
       form.setValue("image", base64);
+      toast.success("画像アップロード完了");
     } catch (error) {
       console.error("画像の処理に失敗しました:", error);
-      toast.error("画像の処理に失敗しました。別の画像をお試しください。");
+      const errorMessage =
+        error instanceof Error ? error.message : "不明なエラー";
+      toast.error(`画像処理エラー: ${errorMessage}`);
     }
   };
 
