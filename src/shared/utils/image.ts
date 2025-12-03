@@ -1,3 +1,51 @@
+import heic2any from "heic2any";
+
+/**
+ * HEIC/HEIF形式かどうかをチェック
+ */
+export function isHEICFormat(file: File): boolean {
+  const fileExtension = file.name.toLowerCase().split(".").pop();
+  const isHEIC =
+    fileExtension === "heic" ||
+    fileExtension === "heif" ||
+    file.type === "image/heic" ||
+    file.type === "image/heif";
+  return isHEIC;
+}
+
+/**
+ * HEIC/HEIF画像をJPEGに変換
+ */
+export async function convertHEICToJPEG(file: File): Promise<File> {
+  try {
+    const convertedBlob = await heic2any({
+      blob: file,
+      toType: "image/jpeg",
+      quality: 0.9,
+    });
+
+    // heic2anyは配列またはBlobを返す可能性があるため、適切に処理
+    const blob = Array.isArray(convertedBlob)
+      ? convertedBlob[0]
+      : convertedBlob;
+
+    // BlobをFileに変換
+    const convertedFile = new File(
+      [blob],
+      file.name.replace(/\.(heic|heif)$/i, ".jpg"),
+      {
+        type: "image/jpeg",
+        lastModified: Date.now(),
+      }
+    );
+
+    return convertedFile;
+  } catch (error) {
+    console.error("HEIC変換エラー:", error);
+    throw new Error("HEIC形式の変換に失敗しました。別の画像をお試しください。");
+  }
+}
+
 /**
  * ファイルをBase64文字列に変換
  */
@@ -30,6 +78,7 @@ export async function convertImageToBase64(file: File): Promise<string> {
 /**
  * 画像のリサイズとBase64変換
  * Lambdaのペイロード制限(6MB)を考慮して画像を圧縮
+ * HEIC/HEIF形式の場合は自動的にJPEGに変換
  */
 export async function resizeAndConvertImage(
   file: File,
@@ -37,6 +86,14 @@ export async function resizeAndConvertImage(
   maxHeight: number = 1024,
   quality: number = 0.8
 ): Promise<string> {
+  // HEIC/HEIF形式の場合はJPEGに変換
+  let processFile = file;
+  if (isHEICFormat(file)) {
+    console.log("HEIC形式を検出、JPEGに変換中...");
+    processFile = await convertHEICToJPEG(file);
+    console.log("JPEG への変換完了");
+  }
+
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -140,6 +197,6 @@ export async function resizeAndConvertImage(
       );
     };
 
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(processFile);
   });
 }

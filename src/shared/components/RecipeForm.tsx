@@ -28,7 +28,7 @@ import {
 } from "@/shared/shadcn/components/ui/select";
 import { Textarea } from "@/shared/shadcn/components/ui/textarea";
 import type { CookingRequest } from "@/shared/types/api";
-import { resizeAndConvertImage } from "@/shared/utils/image";
+import { isHEICFormat, resizeAndConvertImage } from "@/shared/utils/image";
 import { Spinner } from "../shadcn/components/ui/spinner";
 
 const UNIT_OPTIONS = ["個", "本", "枚", "g", "ml", "束", "適量"] as const;
@@ -68,32 +68,41 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
     if (!file) return;
 
     try {
-      // デバッグ: ファイル情報を表示
-      toast.info(
-        `ファイル情報: ${file.name}, サイズ: ${(
-          file.size /
-          1024 /
-          1024
-        ).toFixed(2)}MB, 形式: ${file.type}`
-      );
+      // HEIC/HEIF形式のチェックと通知
+      if (isHEICFormat(file)) {
+        toast.info("HEIC形式を検出しました。JPEGに変換します...", {
+          duration: 3000,
+        });
+      }
+
+      // ファイルサイズチェック（20MB以上は警告）
+      const fileSizeMB = file.size / 1024 / 1024;
+      if (fileSizeMB > 20) {
+        toast.warning(
+          `ファイルサイズが大きいため、処理に時間がかかる場合があります（${fileSizeMB.toFixed(
+            1
+          )}MB）`
+        );
+      }
 
       // プレビュー用
       const previewUrl = URL.createObjectURL(file);
       setImagePreview(previewUrl);
-      toast.success("プレビュー作成成功");
 
       // API送信用のBase64に変換(圧縮)
-      toast.info("画像を圧縮中...");
+      // resizeAndConvertImage内でHEIC→JPEG変換も自動実行される
       const base64 = await resizeAndConvertImage(file);
-      toast.success(`圧縮完了: ${(base64.length / 1024).toFixed(2)}KB`);
 
       form.setValue("image", base64);
-      toast.success("画像アップロード完了");
+      toast.success("画像を読み込みました");
     } catch (error) {
       console.error("画像の処理に失敗しました:", error);
       const errorMessage =
         error instanceof Error ? error.message : "不明なエラー";
       toast.error(`画像処理エラー: ${errorMessage}`);
+      // エラー時はプレビューをクリア
+      setImagePreview(null);
+      e.target.value = ""; // 入力をリセット
     }
   };
 
