@@ -75,16 +75,6 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
         });
       }
 
-      // ファイルサイズチェック（20MB以上は警告）
-      const fileSizeMB = file.size / 1024 / 1024;
-      if (fileSizeMB > 20) {
-        toast.warning(
-          `ファイルサイズが大きいため、処理に時間がかかる場合があります（${fileSizeMB.toFixed(
-            1
-          )}MB）`
-        );
-      }
-
       // プレビュー用
       const previewUrl = URL.createObjectURL(file);
       setImagePreview(previewUrl);
