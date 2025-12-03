@@ -37,7 +37,7 @@ const recipeFormSchema = z.object({
   image: z.string().optional(),
   manualIngredient: z.string().default(""),
   ingredientQuantity: z.string().default(""),
-  ingredientUnit: z.literal(UNIT_OPTIONS).default(UNIT_OPTIONS[0]),
+  ingredientUnit: z.enum(UNIT_OPTIONS).default(UNIT_OPTIONS[0]),
   additionalRequest: z.string().default(""),
 });
 
@@ -86,10 +86,23 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
     const quantity = form.getValues("ingredientQuantity");
     const unit = form.getValues("ingredientUnit");
 
+    if (!ingredientName || ingredientName.trim() === "") {
+      toast.error("食材名を入力してください。");
+      return;
+    }
+
     if (ingredientName?.trim()) {
-      const newIngredient = quantity?.trim()
-        ? `${ingredientName} ${quantity}${unit}`
-        : `${ingredientName} (${unit})`;
+      let newIngredient: string;
+      if (quantity?.trim()) {
+        // 個数が入力されている場合
+        newIngredient = `${ingredientName} ${quantity}${unit}`;
+      } else if (unit === "適量") {
+        // 個数なしで「適量」の場合
+        newIngredient = `${ingredientName} 適量`;
+      } else {
+        // 個数なしで他の単位の場合は単位を表示しない
+        newIngredient = ingredientName;
+      }
       setIngredients([...ingredients, newIngredient]);
       form.setValue("manualIngredient", "");
       form.setValue("ingredientQuantity", "");
@@ -139,27 +152,30 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleFormSubmit)}
-        className="space-y-6"
+        className="space-y-8"
       >
-        {/* 写真アップロードエリア */}
+        {/* メイン: 写真アップロードエリア */}
         <FormField
           control={form.control}
           name="image"
           render={() => (
             <FormItem>
-              <FormLabel className="text-sm font-medium sm:text-base">
+              <FormLabel className="text-lg font-bold sm:text-xl">
                 冷蔵庫の写真をアップロード
               </FormLabel>
               <FormControl>
-                <div className="flex gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row">
                   <div className="flex-1">
                     <label
                       htmlFor="image-upload"
-                      className="flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
+                      className="flex h-56 w-full cursor-pointer flex-col items-center justify-center rounded-xl border-4 border-dashed border-green-300 bg-gradient-to-br from-green-50 to-emerald-50 transition-all hover:border-green-400 hover:bg-gradient-to-br hover:from-green-100 hover:to-emerald-100 dark:border-green-700 dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 dark:hover:border-green-600 sm:h-64"
                     >
-                      <Upload className="mb-2 h-8 w-8 text-gray-400" />
-                      <span className="text-xs text-gray-600 dark:text-gray-400 sm:text-sm">
-                        クリックして画像を選択
+                      <Upload className="mb-3 h-12 w-12 text-green-600 dark:text-green-500" />
+                      <span className="text-base font-semibold text-green-700 dark:text-green-400 sm:text-lg">
+                        ここをクリックして写真を選択
+                      </span>
+                      <span className="mt-2 text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+                        食材の写真から自動でレシピを生成します
                       </span>
                     </label>
                     <Input
@@ -171,7 +187,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
                     />
                   </div>
                   {imagePreview && (
-                    <div className="relative h-40 w-40 overflow-hidden rounded-lg border shadow-sm">
+                    <div className="relative h-56 w-full overflow-hidden rounded-xl border-2 border-green-200 shadow-lg sm:h-64 sm:w-64">
                       <Image
                         src={imagePreview}
                         alt="アップロードプレビュー"
@@ -187,17 +203,23 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
           )}
         />
 
-        {/* 手入力で食材追加 */}
-        <div className="space-y-4">
-          <Label className="text-sm font-medium sm:text-base">
-            手入力で食材を追加
-          </Label>
-          <div className="flex gap-2">
+        {/* 手入力で食材を追加・補完 */}
+        <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800/50">
+          <div>
+            <Label className="text-base font-semibold sm:text-lg">
+              食材を追加・補完
+            </Label>
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+              写真に写っていない食材や、追加で使いたい食材を入力できます
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            {/* 食材名 - スマホでは1行目、PCでは左側 */}
             <FormField
               control={form.control}
               name="manualIngredient"
               render={({ field }: { field: any }) => (
-                <FormItem className="flex-[6]">
+                <FormItem className="w-full sm:flex-[5]">
                   <FormControl>
                     <Input
                       {...field}
@@ -216,66 +238,69 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="ingredientQuantity"
-              render={({ field }: { field: any }) => (
-                <FormItem className="flex-[2]">
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="個数"
-                      className="w-full text-xs sm:text-sm"
-                      min="0"
-                      step="0.1"
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          handleAddIngredient();
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="ingredientUnit"
-              render={({ field }: { field: any }) => (
-                <FormItem className="flex-[1]">
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-full text-xs sm:text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {UNIT_OPTIONS.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              type="button"
-              onClick={handleAddIngredient}
-              variant="outline"
-              disabled={loading}
-              className="flex-[1] text-xs sm:text-sm"
-            >
-              追加
-            </Button>
+            {/* 個数・単位・追加ボタン - スマホでは2行目、PCでは右側 */}
+            <div className="flex gap-2 sm:flex-[5]">
+              <FormField
+                control={form.control}
+                name="ingredientQuantity"
+                render={({ field }: { field: any }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="number"
+                        placeholder="個数"
+                        className="text-xs sm:text-sm"
+                        min="0"
+                        step="0.1"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleAddIngredient();
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="ingredientUnit"
+                render={({ field }: { field: any }) => (
+                  <FormItem className="w-16 sm:w-20 md:w-24">
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="w-full text-xs sm:text-sm">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {UNIT_OPTIONS.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="button"
+                onClick={handleAddIngredient}
+                variant="outline"
+                disabled={loading}
+                className="w-16 sm:w-20 md:w-24 text-xs sm:text-sm"
+              >
+                追加
+              </Button>
+            </div>
           </div>
           {ingredients.length > 0 && (
             <div className="flex flex-wrap gap-2">
@@ -300,21 +325,21 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
           )}
         </div>
 
-        {/* 手入力でレシピに対する細かい要望 */}
+        {/* レシピに対する要望 */}
         <FormField
           control={form.control}
           name="additionalRequest"
           render={({ field }: { field: any }) => (
             <FormItem>
-              <FormLabel className="text-sm font-medium sm:text-base">
-                レシピに対する細かい要望
+              <FormLabel className="text-base font-semibold sm:text-lg">
+                レシピに対する要望（任意）
               </FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   placeholder="例: 時短で作れる料理、辛めの味付け、子供向けなど"
-                  rows={4}
-                  className="text-xs sm:text-sm md:text-base"
+                  rows={5}
+                  className="text-sm sm:text-base"
                 />
               </FormControl>
               <FormMessage />
@@ -327,7 +352,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
           <Button
             type="submit"
             disabled={loading}
-            className="flex-1 bg-green-600 text-sm font-medium transition-colors duration-200 hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 sm:text-base"
+            className="flex-1 bg-green-600 py-6 text-base font-bold transition-colors duration-200 hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 sm:text-lg"
           >
             {loading ? <Spinner /> : "レシピを生成"}
           </Button>
@@ -336,7 +361,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
             onClick={handleReset}
             disabled={loading}
             variant="outline"
-            className="text-sm font-medium transition-colors duration-200 hover:bg-muted focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 sm:text-base"
+            className="py-6 text-base font-medium transition-colors duration-200 hover:bg-muted focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 sm:text-lg"
           >
             リセット
           </Button>
