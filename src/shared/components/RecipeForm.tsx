@@ -68,20 +68,25 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
     if (!file) return;
 
     try {
-      // HEIC/HEIF形式のチェックと通知
+      let previewFile = file;
+
+      // HEIC/HEIF形式のチェックと変換
       if (isHEICFormat(file)) {
         toast.info("HEIC形式を検出しました。JPEGに変換します...", {
           duration: 3000,
         });
+
+        // HEIC→JPEG変換（プレビューとAPI送信の両方で使用）
+        const { convertHEICToJPEG } = await import("@/shared/utils/image");
+        previewFile = await convertHEICToJPEG(file);
       }
 
-      // プレビュー用
-      const previewUrl = URL.createObjectURL(file);
+      // プレビュー用（HEIC形式の場合は変換後のJPEGを使用）
+      const previewUrl = URL.createObjectURL(previewFile);
       setImagePreview(previewUrl);
 
       // API送信用のBase64に変換(圧縮)
-      // resizeAndConvertImage内でHEIC→JPEG変換も自動実行される
-      const base64 = await resizeAndConvertImage(file);
+      const base64 = await resizeAndConvertImage(previewFile);
 
       form.setValue("image", base64);
       toast.success("画像を読み込みました");
