@@ -8,6 +8,7 @@ import {
   Sheet,
   SheetContent,
   SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "@/shared/shadcn/components/ui/sheet";
 import { cn } from "@/shared/shadcn/lib/utils";
@@ -47,9 +48,9 @@ export function Navigation({ className }: NavigationProps) {
           </SheetTrigger>
           <SheetContent side="left" className="w-80">
             <SheetHeader>
-              <div className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl">
+              <SheetTitle className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl">
                 Dish Go
-              </div>
+              </SheetTitle>
             </SheetHeader>
             <NavigationContent onItemClick={() => setIsOpen(false)} />
           </SheetContent>
