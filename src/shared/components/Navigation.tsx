@@ -37,11 +37,7 @@ export function Navigation({ className }: NavigationProps) {
       <div className={cn("lg:hidden", className)}>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="fixed top-4 left-4 z-40"
-            >
+            <Button variant="outline" size="icon" className="fixed top-4 left-4 z-40">
               <Menu className="h-5 w-5" />
               <span className="sr-only">メニューを開く</span>
             </Button>
@@ -65,9 +61,7 @@ export function Navigation({ className }: NavigationProps) {
         )}
       >
         <div className="p-6 border-b">
-          <div className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl">
-            Dish Go
-          </div>
+          <div className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl">Dish Go</div>
         </div>
         <NavigationContent />
       </aside>
@@ -105,19 +99,11 @@ function NavigationContent({ onItemClick }: NavigationContentProps) {
       <div className="flex flex-col h-full">
         {/* アクションボタン */}
         <div className="p-4 space-y-2 border-b">
-          <Button
-            variant="default"
-            className="w-full justify-start"
-            onClick={handleLogin}
-          >
+          <Button variant="default" className="w-full justify-start" onClick={handleLogin}>
             <LogIn className="mr-2 h-4 w-4" />
             ログイン / 登録
           </Button>
-          <Button
-            variant="outline"
-            className="w-full justify-start"
-            onClick={handleLanguageChange}
-          >
+          <Button variant="outline" className="w-full justify-start" onClick={handleLanguageChange}>
             <Languages className="mr-2 h-4 w-4" />
             言語: 日本語
           </Button>
@@ -140,9 +126,7 @@ function NavigationContent({ onItemClick }: NavigationContentProps) {
                     type="button"
                   >
                     <div className="font-medium">{recipe.title}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {recipe.date}
-                    </div>
+                    <div className="text-sm text-muted-foreground">{recipe.date}</div>
                   </button>
                 ))
               ) : (

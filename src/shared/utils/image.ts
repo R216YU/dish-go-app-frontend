@@ -26,19 +26,13 @@ export async function convertHEICToJPEG(file: File): Promise<File> {
     });
 
     // heic2anyは配列またはBlobを返す可能性があるため、適切に処理
-    const blob = Array.isArray(convertedBlob)
-      ? convertedBlob[0]
-      : convertedBlob;
+    const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
 
     // BlobをFileに変換
-    const convertedFile = new File(
-      [blob],
-      file.name.replace(/\.(heic|heif)$/i, ".jpg"),
-      {
-        type: "image/jpeg",
-        lastModified: Date.now(),
-      }
-    );
+    const convertedFile = new File([blob], file.name.replace(/\.(heic|heif)$/i, ".jpg"), {
+      type: "image/jpeg",
+      lastModified: Date.now(),
+    });
 
     return convertedFile;
   } catch (error) {
@@ -144,17 +138,13 @@ export async function resizeAndConvertImage(
           try {
             const base64 = canvas.toDataURL("image/jpeg", quality);
             const base64Data = extractBase64Data(base64);
-            console.log(
-              `Base64サイズ: ${(base64Data.length / 1024).toFixed(2)}KB`
-            );
+            console.log(`Base64サイズ: ${(base64Data.length / 1024).toFixed(2)}KB`);
             resolve(base64Data);
           } catch (canvasError) {
             reject(
               new Error(
                 `Canvas変換エラー: ${
-                  canvasError instanceof Error
-                    ? canvasError.message
-                    : "不明なエラー"
+                  canvasError instanceof Error ? canvasError.message : "不明なエラー"
                 }`
               )
             );
@@ -163,9 +153,7 @@ export async function resizeAndConvertImage(
           reject(
             new Error(
               `画像処理エラー: ${
-                processError instanceof Error
-                  ? processError.message
-                  : "不明なエラー"
+                processError instanceof Error ? processError.message : "不明なエラー"
               }`
             )
           );
@@ -174,11 +162,7 @@ export async function resizeAndConvertImage(
 
       img.onerror = (error) => {
         console.error("画像読み込みエラー:", error);
-        reject(
-          new Error(
-            "画像の読み込みに失敗しました。ファイル形式を確認してください。"
-          )
-        );
+        reject(new Error("画像の読み込みに失敗しました。ファイル形式を確認してください。"));
       };
 
       if (!e.target?.result) {
@@ -192,9 +176,7 @@ export async function resizeAndConvertImage(
     reader.onerror = (error) => {
       console.error("FileReaderエラー:", error);
       reject(
-        new Error(
-          "ファイルの読み込みに失敗しました。ファイルが破損している可能性があります。"
-        )
+        new Error("ファイルの読み込みに失敗しました。ファイルが破損している可能性があります。")
       );
     };
 

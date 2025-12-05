@@ -22,7 +22,5 @@ export function Heading({ level, children, className }: HeadingProps) {
   const Component = level;
   const baseStyles = headingStyles[level];
 
-  return (
-    <Component className={cn(baseStyles, className)}>{children}</Component>
-  );
+  return <Component className={cn(baseStyles, className)}>{children}</Component>;
 }

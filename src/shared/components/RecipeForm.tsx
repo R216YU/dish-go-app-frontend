@@ -92,8 +92,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
       toast.success("画像を読み込みました");
     } catch (error) {
       console.error("画像の処理に失敗しました:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "不明なエラー";
+      const errorMessage = error instanceof Error ? error.message : "不明なエラー";
       toast.error(`画像処理エラー: ${errorMessage}`);
       // エラー時はプレビューをクリア
       setImagePreview(null);
@@ -135,9 +134,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
 
   const handleFormSubmit = (values: RecipeFormValues) => {
     if (!values.image && ingredients.length === 0) {
-      toast.info(
-        "画像のアップロードまたは食材の入力のいずれかを行ってください。"
-      );
+      toast.info("画像のアップロードまたは食材の入力のいずれかを行ってください。");
       return;
     }
 
@@ -147,9 +144,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
       textRequest = `食材: ${ingredients.join(", ")}`;
     }
     if (values.additionalRequest?.trim()) {
-      textRequest += textRequest
-        ? `\n${values.additionalRequest}`
-        : values.additionalRequest;
+      textRequest += textRequest ? `\n${values.additionalRequest}` : values.additionalRequest;
     }
 
     const request: CookingRequest = {
@@ -170,10 +165,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleFormSubmit)}
-        className="space-y-8"
-      >
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-8">
         {/* メイン: 写真アップロードエリア */}
         <FormField
           control={form.control}
@@ -226,9 +218,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
         {/* 手入力で食材を追加・補完 */}
         <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800/50">
           <div>
-            <Label className="text-base font-semibold sm:text-lg">
-              食材を追加・補完
-            </Label>
+            <Label className="text-base font-semibold sm:text-lg">食材を追加・補完</Label>
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
               写真に写っていない食材や、追加で使いたい食材を入力できます
             </p>
@@ -291,10 +281,7 @@ export function RecipeForm({ onSubmit, loading }: RecipeFormProps) {
                 render={({ field }: { field: any }) => (
                   <FormItem className="w-16 sm:w-20 md:w-24">
                     <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <SelectTrigger className="w-full text-xs sm:text-sm">
                           <SelectValue />
                         </SelectTrigger>

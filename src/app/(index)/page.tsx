@@ -5,11 +5,7 @@ import { RecipeForm } from "@/shared/components/RecipeForm";
 import { RecipeList } from "@/shared/components/RecipeList";
 import { useRecipeGenerator } from "@/shared/hooks/useRecipeGenerator";
 import { Heading } from "@/shared/components/Heading";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/shared/shadcn/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/shared/shadcn/components/ui/card";
 
 export default function Home() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";

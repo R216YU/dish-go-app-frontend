@@ -29,9 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body
-        className={`${interRegular.variable} ${interSemiBold.variable} antialiased`}
-      >
+      <body className={`${interRegular.variable} ${interSemiBold.variable} antialiased`}>
         <div className="flex min-h-screen">
           <Navigation />
           <main className="flex-1 lg:ml-0">{children}</main>

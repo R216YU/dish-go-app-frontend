@@ -6,13 +6,9 @@ import {
   AccordionTrigger,
 } from "@/shared/shadcn/components/ui/accordion";
 import { Badge } from "@/shared/shadcn/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/shared/shadcn/components/ui/card";
-import { Heading } from "./Heading";
+import { Card, CardContent, CardHeader } from "@/shared/shadcn/components/ui/card";
 import type { Recipe } from "@/shared/types/api";
+import { Heading } from "./Heading";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -47,10 +43,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   };
 
   return (
-    <Card
-      ref={cardRef}
-      className="transition-shadow duration-200 hover:shadow-lg"
-    >
+    <Card ref={cardRef} className="transition-shadow duration-200 hover:shadow-lg">
       <Accordion
         type="single"
         collapsible
@@ -103,9 +96,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
                     const text = match ? match[2] : instruction;
                     return (
                       <li key={instruction} className="flex gap-2">
-                        <span className="font-semibold text-primary">
-                          {number}.
-                        </span>
+                        <span className="font-semibold text-primary">{number}.</span>
                         <span>{text}</span>
                       </li>
                     );
